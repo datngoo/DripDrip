@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>DripDrip isolated storage QA</title>
+<style>body{font:16px system-ui;background:#f0f9ff;color:#25465e;padding:40px}button{padding:15px;border-radius:12px;border:0;background:#73c2fb;font:inherit}pre{white-space:pre-wrap;line-height:1.7}</style>
+<h1>DripDrip · isolated browser database tests</h1>
+<p>Dedicated local test origin. No user data.</p>
+<button id="run">Run transaction tests</button><pre id="result" role="status">Ready.</pre>
+<script type="module">
+import {transact,replaceState} from '../src/storage.js';
+import {createState,localDay,shiftDay} from '../src/models.js';
+import {logWater,buyOrEquip} from '../src/actions.js';
+import {intakeFor} from '../src/hydration-engine.js';
+const output=document.querySelector('#result'),button=document.querySelector('#run');
+const assert=(condition,message)=>{if(!condition)throw new Error(message)};
+button.onclick=async()=>{
+  if(location.hostname!=='127.0.0.1'||location.port!=='4174'){output.textContent='Open this test on dedicated local port 4174.';return;}
+  button.disabled=true;output.textContent='Running…';const results=[];
+  try{
+    await replaceState(createState());
+    await Promise.all(Array.from({length:20},()=>transact(s=>logWater(s,25))));
+    let latest=(await transact()).state;
+    assert(intakeFor(latest)===500&&latest.logs.length===20,'Concurrent logs lost data');
+    results.push('PASS · 20 simultaneous transactions retain all 20 logs (500 ml).');
+    const yesterday=new Date(shiftDay(localDay(),-1)+'T12:00:00');
+    const seed=createState(yesterday);logWater(seed,2000,yesterday);await replaceState(seed);
+    await Promise.all(Array.from({length:20},()=>transact(s=>logWater(s,25))));
+    latest=(await transact()).state;
+    assert(latest.profile.waterCoins===10&&latest.profile.currentStreak===1,'Settlement duplicated a reward');
+    results.push('PASS · 20 simultaneous day reconciliations grant exactly 10 coins and 1 streak day.');
+    latest.profile.waterCoins=140;await replaceState(latest);
+    await Promise.all(Array.from({length:20},()=>transact(s=>buyOrEquip(s,'cloud','skin'))));
+    latest=(await transact()).state;
+    assert(latest.profile.waterCoins===40&&latest.purchases.length===1&&latest.profile.selectedSkinId==='cloud','Purchase double charged');
+    results.push('PASS · 20 simultaneous purchases debit once and equip the item.');
+    const before=JSON.stringify(latest);let aborted=false;
+    try{await transact(s=>{s.profile.waterCoins=999;s.logs=[];throw new Error('Intentional abort');});}catch{aborted=true;}
+    latest=(await transact()).state;
+    assert(aborted&&JSON.stringify(latest)===before,'Aborted transaction wrote partial state');
+    results.push('PASS · Aborted transactions leave no partially written state.');
+    output.textContent=results.join('\n')+'\n\nAll 4 storage integration checks passed.';
+  }catch(error){output.textContent=results.join('\n')+'\nFAIL · '+error.message;}
+};
+</script></html>

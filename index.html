@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#F0F9FF" />
+    <meta
+      name="description"
+      content="DripDrip — Người bạn giọt nước. Ghi nước, nuôi Drippy và xây một thói quen nhỏ mỗi ngày. Offline, không cần tài khoản."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="DripDrip" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <title>DripDrip · Một ngụm tươi hơn</title>
+    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Đến nội dung chính</a>
+    <div id="app">
+      <div class="loading-screen">
+        <span>💧</span>
+        <h1>dripdrip</h1>
+        <p>Đang đánh thức Drippy…</p>
+      </div>
+    </div>
+    <dialog id="modal" aria-labelledby="modal-title"></dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <input type="file" id="restore-file" accept="application/json,.json" hidden />
+    <noscript>DripDrip cần JavaScript để ghi nước và lưu dữ liệu trên thiết bị.</noscript>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

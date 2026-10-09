@@ -1,0 +1,29 @@
+{
+  "id": "./",
+  "name": "DripDrip — Người bạn giọt nước",
+  "short_name": "DripDrip",
+  "description": "Một ngụm nước. Một thói quen nhỏ. Một Drippy hạnh phúc.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F0F9FF",
+  "theme_color": "#F0F9FF",
+  "icons": [
+    { "src": "./assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ghi nhanh 200 ml",
+      "short_name": "+200 ml",
+      "url": "./?quick=200",
+      "icons": [{ "src": "./assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "dripdrip",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Your little hydration companion. Offline-first, privacy-first PWA.",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
